@@ -1,0 +1,166 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html{
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+}
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+img,
+ul
+{
+  font-family: 'Inconsolata', monospace;
+  margin: 0;
+}
+
+.flex
+{
+  display: flex;
+}
+a{
+  text-decoration: none;
+  color: black;
+  cursor:pointer;
+}
+ul 
+{
+  list-style-type: none;
+  justify-content:space-between;
+  padding: 0;
+}
+.navigation
+{
+  width: 100%;
+  max-height:15vh;
+  background-color:#3333;
+  align-items: center;
+}
+.link
+{
+  font-size:2.5rem;
+  padding: 1rem;
+  margin-inline:2rem;
+}
+.TopSongs,.TopArtist
+{
+  border: 1px solid black;
+  flex-direction: column;
+  gap:1rem;
+  min-height:40vh;
+  margin-top:2rem;
+  margin: 3rem;
+  padding: 1rem;
+}
+.addsong
+{ 
+  background-color: black;
+  color:white;
+  font-size:2rem;
+  padding:.5rem;
+}
+.Artistheading,.Songheading
+{
+  justify-content: space-between;
+}
+.tableArtist
+{
+  border-right: 1.5px solid black;
+  border-top: 1.5px solid black;
+  border-bottom:1.5px solid black;
+  border-collapse: collapse;
+  font-size:2rem;
+  text-align: center;
+}
+th
+{
+  background-color: rgb(21, 0, 47);
+  color:white;
+  padding:.5rem;
+}
+th,td
+{
+  border-left:1.5px solid black;
+}
+.addsongdetails
+{
+  margin:3em;
+  border: 1px solid black;
+  flex-direction: column;
+}
+.formdata
+{
+  font-size:2rem;
+  padding:2rem 4rem;
+  width:60%;
+  min-height:50vh;
+  gap:4rem;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.field
+{
+  justify-content:space-between;
+}
+.input
+{
+  width:50%;
+  height:3rem;
+  outline: none;
+  border: none;
+  border:.5px solid black;
+  border-radius: 2px;
+}
+.button
+{
+  font-size:1.7rem;
+  text-align: center;
+  color:white;
+  background-color: #333;
+}
+option
+{
+  background-color: antiquewhite;
+}
+.addartist
+{
+  position: relative;
+  flex-direction: column;
+  width: 50%;
+  background-color: bisque;
+  margin: auto;
+  border: 1px solid black;
+}
+.artistdata
+{
+  font-size:2rem;
+  padding:2rem 4rem;
+  width:100%;
+  min-height:50vh;
+  gap:4rem;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.header
+{
+  justify-content: space-between;
+  border-bottom: 2px solid black;
+  padding:1rem 4rem;
+}
+.header >h1
+{
+  font-size:2rem;
+}
+.cross
+{
+  font-size:1.6rem;
+  font-weight: bolder;
+}
