@@ -1,13 +1,42 @@
 <?php
+    $showerror=false;
+    $showmsg=false;
+    require './database_connection.php';
+    if($_SERVER['REQUEST_METHOD']=="POST")
+    {
+        if(isset($_POST['artist_name']) && isset($_POST['DOB']) && isset($_POST['bio']))
+        {
+            $A_name=$_POST['artist_name'];
+            $DOB=$_POST['DOB'];
+            $bio=$_POST['bio'];
 
-$conn=mysqli_connect("localhost","root","Robin@123","spotify");
-if(!$conn)
-{
-    die("unable to connect database".mysqli_connect_error());
-}
-?>
-
-
+            $q="SELECT * from artist WHERE artist_name='$A_name' AND date_of_birth='$DOB' AND bio='$bio' ";
+            $result=mysqli_query($conn,$q);
+            if(mysqli_num_rows($result)>0)
+            {
+                $showerror="artist already exist";
+            }
+            else
+            {
+                $query="INSERT INTO artist (artist_name,date_of_birth,bio) values ('$A_name','$DOB','$bio')";
+                $res=mysqli_query($conn,$query);
+                if($res)
+                {
+                    $showmsg="Artist data inserted successfully";
+                }
+                else
+                {
+                    $showerror="unable to insert record";
+                }
+            }
+        }
+        else
+        {
+            $showerror="input field can not be empty";   
+        }
+    }
+    mysqli_close($conn);
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,6 +54,27 @@ if(!$conn)
             <h1 class="link">Spotify-Clone</h1>
         </ul>
     </nav>
+
+<!-- display message -->
+<?php
+  if($showmsg==TRUE)
+  {
+  echo  "<div class='alert_message'>
+              <p class='h2'>$showmsg</p>
+              <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
+          </div>";
+         $showmsg=false; 
+  }    
+  if($showerror==TRUE)
+  {
+  echo  "<div class='warning_message'>
+              <p class='h2'>$showerror</p>
+              <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
+          </div>";
+         $showesrror=false; 
+  }      
+?>
+<!-- top songs sections -->
     <section class="TopSongs flex">
         <div class="Songheading flex">
             <h1 style="font-size:3rem;">TOP 10 Songs</h1>
@@ -48,6 +98,10 @@ if(!$conn)
                 </tr>
             </table>
     </section>
+
+
+<!-- top artist section -->
+
     <section class="TopArtist flex">
         <div class="Artistheading flex">
             <h1 style="font-size:3rem;">TOP 10 Artists</h1>
@@ -66,6 +120,8 @@ if(!$conn)
                 </tr>
             </table>
     </section>
+
+<!-- add new song section -->
     <section class="addsongdetails flex">
         <h1 style="font-size:2.5rem;padding:2rem 4rem">Adding a New Song -</h1>
         <form class="flex formdata" action="#" method="POST">
@@ -86,6 +142,7 @@ if(!$conn)
                 <input class="input" type="text" name="artists[]" list="aname">
                 <datalist id="aname">
                 <?php
+                    require './database_connection.php';
                     $q1="SELECT artist_name from artist";
                     $res=mysqli_query($conn,$q1);
                     $row=mysqli_num_rows($res);
@@ -96,6 +153,7 @@ if(!$conn)
                              <option value="$artist_names"></option>
                              a;                       
                     }
+                    mysqli_close($conn);
                 ?>
                 </datalist>
             </div>
@@ -106,12 +164,14 @@ if(!$conn)
         </form>
     </section>
 
+
+<!-- add artist section -->
     <section class="addartist flex">
         <div class="flex header">
             <h1>Add Artist -</h1>
             <button class="cross">&#9747</button>
         </div>
-        <form class="flex artistdata" action="#" method="POST">
+        <form class="flex artistdata" action="<?php htmlspecialchars($_SERVER['PHP_SELF']);?>" method="POST">
             <div class="flex field">
                 <label for="AN">Artist Name </label>
                 <input class="input" type="text" name="artist_name" id="AN">
@@ -125,10 +185,12 @@ if(!$conn)
                 <textarea class="input"  name="bio" id="bio" ></textarea>
             </div>
             <div style="text-align: center; margin-top: 3rem;">
-                <input class="button" type="button" value="Save">
+                <input class="button" type="submit" value="Save">
                 <input class="button" type="reset" value="cancel">
-             </div>
+            </div>
+            
         </form>
     </section>
+
 </body>
 </html>

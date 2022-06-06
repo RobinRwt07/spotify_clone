@@ -28,7 +28,7 @@ ul
 }
 a{
   text-decoration: none;
-  color: black;
+  color: white;
   cursor:pointer;
 }
 ul 
@@ -40,8 +40,9 @@ ul
 .navigation
 {
   width: 100%;
+  color:white;
   max-height:15vh;
-  background-color:#3333;
+  background-color:#333;
   align-items: center;
 }
 .link
@@ -163,4 +164,31 @@ option
 {
   font-size:1.6rem;
   font-weight: bolder;
+}
+
+
+.alert_message
+{
+    display:flex;
+    padding:0 2em;
+    justify-content: space-between;
+    background-color:rgb(177, 255, 177);
+}
+.alert_message p,.warning_message p
+{
+    align-self: center;
+    font-size: 2em;
+}
+.cross1
+{
+    font-size:3.2em;
+    font-weight: bold;
+    cursor: pointer;
+}
+.warning_message
+{
+    display:flex;
+    padding:0 2em;
+    justify-content: space-between;
+    background-color:tomato;
 }
