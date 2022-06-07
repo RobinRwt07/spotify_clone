@@ -130,7 +130,58 @@
         </ul>
     </nav>
 
-    <!-- display message -->
+    <!-- add new song section -->
+    <section class="songcontainer"  id="addsongbox">
+
+        <div class="addsongdetails flex">
+            <div class="flex songheader">
+                <h1 style="font-size:2.5rem;">Adding a New Song -</h1>
+                <button class="cross" onclick="document.getElementById('addsongbox').style.display='none'">&#9747</button>
+            </div>
+            <form class="flex formdata" action="#" method="POST" enctype="multipart/form-data">
+                <div class="flex field">
+                    <label for="sname">Song Name </label>
+                    <input class="input" type="text" name="song_name" id="sname" required>
+                </div>
+                <div class="flex field">
+                    <label for="date">Date Released </label>
+                    <input class="input" type="date" name="released_date" id="date" required>
+                </div>
+                <div class="flex field">
+                    <label for="photo">Artwork </label>
+                    <input class="input" type="file" name="artwork" id="photo" value="Upload Image" accept="image/*"
+                        required>
+                </div>
+                <div class="flex field">
+                    <label for="aname">Artist </label>
+                    <input class="input" type="text" name="artists" list="aname" Placeholder="Search Artist" required>
+                    <datalist id="aname">
+                        <?php
+                        require './database_connection.php';
+                        $q1="SELECT artist_name from artist";
+                        $res=mysqli_query($conn,$q1);
+                        $row=mysqli_num_rows($res);
+                        while($data=mysqli_fetch_assoc($res))
+                        {
+                            $artist_names=$data['artist_name'];
+                            echo <<<a
+                            <option value="$artist_names"></option>
+                            a;                       
+                        }
+                        mysqli_close($conn);
+                        ?>
+                    </datalist>
+                </div>
+                <div style="text-align: center; margin-top: 3rem;">
+                    <input class="button" type="submit" value="Save">
+                    <input class="button" type="reset" value="cancel">
+                    <button class="button" onclick=" document.getElementById('addartistsection').style.display='block' ">+ Add Artist</button>
+                </div>
+            </form>
+            </div>
+    </section>
+
+            <!-- display message -->
     <?php
         if($showmsg==TRUE)
         {
@@ -154,7 +205,7 @@
     <section class="TopSongs flex">
         <div class="Songheading flex">
             <h1 style="font-size:3rem;">TOP 10 Songs</h1>
-            <button class="addsong" onclick="document.getElementById('addsongbox').style.display='block'" >+ Add Song</button>
+            <button class="button" onclick="document.getElementById('addsongbox').style.display='block'" >+ Add Song</button>
         </div>
 
         <table class="tableArtist">
@@ -177,7 +228,6 @@
 
 
     <!-- top artist section -->
-
     <section class="TopArtist flex">
         <div class="Artistheading flex">
             <h1 style="font-size:3rem;">TOP 10 Artists</h1>
@@ -197,81 +247,34 @@
         </table>
     </section>
 
-    <!-- add new song section -->
-    <section>
-        <div class="addsongdetails flex" id="addsongbox">
-         <div class="flex songheader">
-             <h1 style="font-size:2.5rem;">Adding a New Song -</h1>
-             <button class="cross">&#9747</button>
-         </div>
-         <form class="flex formdata" action="#" method="POST" enctype="multipart/form-data">
-            <div class="flex field">
-                <label for="sname">Song Name </label>
-                <input class="input" type="text" name="song_name" id="sname" required>
+  
+<!-- add artist section -->
+    <section class="artistcontianer flex" id="addartistsection">
+        
+        <div class="addartist flex" >
+            <div class="flex header">
+                <h1>Add Artist -</h1>
+                <button class="cross" onclick="document.getElementById('addartistsection').style.display='none'">&#9747 </button>
             </div>
-            <div class="flex field">
-                <label for="date">Date Released </label>
-                <input class="input" type="date" name="released_date" id="date" required>
-            </div>
-            <div class="flex field">
-                <label for="photo">Artwork </label>
-                <input class="input" type="file" name="artwork" id="photo" value="Upload Image" accept="image/*"
-                    required>
-            </div>
-            <div class="flex field">
-                <label for="aname">Artist </label>
-                <input class="input" type="text" name="artists" list="aname" Placeholder="Search Artist" required>
-                <datalist id="aname">
-                    <?php
-                    require './database_connection.php';
-                    $q1="SELECT artist_name from artist";
-                    $res=mysqli_query($conn,$q1);
-                    $row=mysqli_num_rows($res);
-                    while($data=mysqli_fetch_assoc($res))
-                    {
-                        $artist_names=$data['artist_name'];
-                        echo <<<a
-                             <option value="$artist_names"></option>
-                             a;                       
-                    }
-                    mysqli_close($conn);
-                ?>
-                </datalist>
-            </div>
-            <div style="text-align: center; margin-top: 3rem;">
-                <input class="button" type="submit" value="Save">
-                <input class="button" type="reset" value="cancel">
-            </div>
-         </form>
+            <form class="flex artistdata" action="<?php htmlspecialchars($_SERVER['PHP_SELF']);?>" method="GET">
+                <div class="flex field">
+                    <label for="AN">Artist Name </label>
+                    <input class="input" type="text" name="artist_name" id="AN">
+                </div>
+                <div class="flex field">
+                    <label for="DOB">Date of Birth </label>
+                    <input class="input" type="date" name="DOB" id="DOB">
+                </div>
+                <div class="flex field">
+                    <label for="boi">Bio </label>
+                    <textarea class="input" name="bio" id="bio"></textarea>
+                </div>
+                <div style="text-align: center; margin-top: 3rem;">
+                    <input class="button" type="submit" value="Save">
+                    <input class="button" type="reset" value="cancel">
+                </div>
+            </form>
         </div>
     </section>
-
-
-    <!-- add artist section -->
-    <section class="addartist flex">
-        <div class="flex header">
-            <h1>Add Artist -</h1>
-            <button class="cross">&#9747</button>
-        </div>
-        <form class="flex artistdata" action="<?php htmlspecialchars($_SERVER['PHP_SELF']);?>" method="GET">
-            <div class="flex field">
-                <label for="AN">Artist Name </label>
-                <input class="input" type="text" name="artist_name" id="AN">
-            </div>
-            <div class="flex field">
-                <label for="DOB">Date of Birth </label>
-                <input class="input" type="date" name="DOB" id="DOB">
-            </div>
-            <div class="flex field">
-                <label for="boi">Bio </label>
-                <textarea class="input" name="bio" id="bio"></textarea>
-            </div>
-            <div style="text-align: center; margin-top: 3rem;">
-                <input class="button" type="submit" value="Save">
-                <input class="button" type="reset" value="cancel">
-            </div>
-
-        </form>
-    </section>
- </body>
+</body>
 </html>
