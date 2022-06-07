@@ -244,7 +244,6 @@
                 <th>Song</th>
                 <th>Date of Realese</th>
                 <th>Artist</th>
-                <th>Rating</th>
             </tr>
             <?php
                  require 'database_connection.php';
