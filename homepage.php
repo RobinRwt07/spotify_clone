@@ -291,19 +291,20 @@
             </tr>
             <?php
                 require 'database_connection.php';
-                $query4="SELECT artist.artist_name ,artist.date_of_birth ,songs.song_name
-                        FROM artist
-                        INNER JOIN songs
-                        ON songs.singer=artist.artist_name
-                        group by songs.singer";
+                $query4="SELECT songs.singer,artist.date_of_birth,
+                         GROUP_CONCAT(songs.song_name)
+                         FROM songs
+                         INNER JOIN artist
+                         ON artist.artist_name=songs.singer
+                         GROUP BY singer";
                 $result5=mysqli_query($conn,$query4);
                 if(mysqli_num_rows($result5)>0)
                 {
                     while($data1=mysqli_fetch_assoc($result5))
                     {
-                        $name=$data1['artist_name'];
+                        $name=$data1['singer'];
                         $dob=$data1['date_of_birth'];
-                        $songname=$data1['song_name'];
+                        $songname=$data1['GROUP_CONCAT(songs.song_name)'];
                         echo <<<x
                             <tr>
                                 <td>$name</td>
