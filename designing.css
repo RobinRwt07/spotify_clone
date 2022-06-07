@@ -93,19 +93,23 @@ th,td
 }
 .addsongdetails
 {
-  margin:3em;
-  border: 1px solid black;
+  width: 60%;
+  margin:0 auto;
+  align-items: center;
   flex-direction: column;
+  display: none;
 }
 .formdata
 {
   font-size:2rem;
   padding:2rem 4rem;
-  width:60%;
+  background-color: aqua;
+  width:100%;
   min-height:50vh;
   gap:4rem;
   flex-direction: column;
   justify-content: space-evenly;
+  border:1px solid black;
 }
 .field
 {
@@ -164,6 +168,13 @@ option
 {
   font-size:1.6rem;
   font-weight: bolder;
+}
+.songheader
+{
+  width: 100%;
+  justify-content: space-between;
+  padding: 1.5rem 4rem;
+  border: 1px solid black;
 }
 
 

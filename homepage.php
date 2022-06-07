@@ -6,6 +6,12 @@
     {
         if(isset($_GET['artist_name']) && isset($_GET['DOB']) && isset($_GET['bio']))
         {
+            if(empty($_GET['artist_name']) || empty($_GET['DOB']) || empty($_GET['bio']) )
+            {
+                $showerror="please fill the form.";
+            }
+            else
+            {
             $A_name=$_GET['artist_name'];
             $DOB=$_GET['DOB'];
             $bio=$_GET['bio'];
@@ -29,16 +35,19 @@
                     $showerror="unable to insert record";
                 }
             }
+            }
         }
-        else
-        {
-            $showerror="input field can not be empty";   
-        }
+        // else
+        // {
+        //     $showerror="input field can not be empty";   
+        // }
     }
     mysqli_close($conn);
     ?>
 
- <?php
+
+<!-- insert song data into database -->
+<?php
   $path="./Artwork/";
   if(!file_exists($path))
   {
@@ -47,71 +56,73 @@
   $artworkpath="Artwork/";
   if($_SERVER['REQUEST_METHOD']=='POST')
   {
-      if( isset($_POST['song_name']) && isset($_POST['released_date']) && isset($_POST['artists']) && isset($_FILES['artwork']))
-      {
-            $songName=$_POST['song_name'];
-            $date=$_POST['released_date'];
-            $artwork=$_FILES['artwork'];
-            $artistName=$_POST['artists'];
-          
-        //   if($_FILES['artwork']['size']==0)
-        //   {
-        //       $_FILES['artwork']['name']="default_artwork.jpg";
-        //   }
-          $artworkName= $artworkpath.basename($_FILES['artwork']['name']);
-          #checking if song already exist or not
-          require 'database_connection.php';
-          $quer1="SELECT * FROM songs WHERE song_name = '$songName' AND date_released='$date' AND singer= '$artistName' ";
-          $result=mysqli_query($conn,$quer1);
-          $rows=mysqli_num_rows($result);
-          if($rows>0)
-          {
-              $showerror="Song Already Exist";
-          }
-          else
-          {    
-              $result1=move_uploaded_file($_FILES['artwork']['tmp_name'],$artworkName);
-              if($result1)
-              {
-                 $query2="INSERT INTO songs (song_name,date_released,artwork,singer) VALUES(?,?,?,?)";
-                 $stmt=mysqli_prepare($conn,$query2);
-                 $success=mysqli_stmt_bind_param($stmt,"ssss",$songName,$date,$artworkName,$artistName);
-                 if($success)
-                 {
-                   
-                    $result3=mysqli_stmt_execute($stmt);
-                    if($result3)
+    if( isset($_POST['song_name']) && isset($_POST['released_date']) && isset($_POST['artists']) && isset($_FILES['artwork']))
+    {
+        $songName=$_POST['song_name'];
+        $date=$_POST['released_date'];
+        $artwork=$_FILES['artwork'];
+        $artistName=$_POST['artists'];
+        require 'database_connection.php';
+        $q3="SELECT * FROM artist WHERE artist_name = '$artistName' ";
+        $checkArtist=mysqli_query($conn,$q3);
+        if(mysqli_num_rows($checkArtist)==0)
+        {
+            $showerror="please add artist.";
+            mysqli_close($conn);
+        }
+        else
+        {          
+            $artworkName= $artworkpath.basename($_FILES['artwork']['name']);
+            #checking if song already exist or not
+            $quer1="SELECT * FROM songs WHERE song_name = '$songName' AND date_released='$date' AND singer= '$artistName' ";
+            $result=mysqli_query($conn,$quer1);
+            $rows=mysqli_num_rows($result);
+            if($rows>0)
+            {
+                $showerror="Song Already Exist";
+            }
+            else
+            {    
+                $result1=move_uploaded_file($_FILES['artwork']['tmp_name'],$artworkName);
+                if($result1)
+                {
+                    $query2="INSERT INTO songs (song_name,date_released,artwork,singer) VALUES(?,?,?,?)";
+                    $stmt=mysqli_prepare($conn,$query2);
+                    $success=mysqli_stmt_bind_param($stmt,"ssss",$songName,$date,$artworkName,$artistName);
+                    if($success)
                     {
-                        $showmsg="Successfully added.";
+                    
+                        $result3=mysqli_stmt_execute($stmt);
+                        if($result3)
+                        {
+                            $showmsg="Successfully added.";
+                        }
+                        else
+                        {
+                            $showerror="Unable to add Book.";
+                        }
                     }
-                    else
-                    {
-                        $showerror="Unable to add Book.";
-                    }
-                 }
-              }
-          }
+                }
+            }
+        }
          
-      }
-      else
-      {
-          $showerror="inputed field can not be empty";
-      }
+    }
   }   
  ?>
- 
- 
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
+ <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="this is spotify clone app with basic functionality">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>spotify-clone</title>
     <link rel="stylesheet" href="./designing.css">
-</head>
-<body>
+ </head>
+
+ <body>
     <nav class="navigation">
         <ul class="flex">
             <li class="link"><a href="#">HOME</a></li>
@@ -119,93 +130,99 @@
         </ul>
     </nav>
 
-<!-- display message -->
-<?php
-  if($showmsg==TRUE)
-  {
-  echo  "<div class='alert_message'>
-              <p class='h2'>$showmsg</p>
-              <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
-          </div>";
-         $showmsg=false; 
-  }    
-  if($showerror==TRUE)
-  {
-  echo  "<div class='warning_message'>
-              <p class='h2'>$showerror</p>
-              <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
-          </div>";
-         $showesrror=false; 
-  }      
-?>
-<!-- top songs sections -->
+    <!-- display message -->
+    <?php
+        if($showmsg==TRUE)
+        {
+        echo  "<div class='alert_message'>
+                    <p class='h2'>$showmsg</p>
+                    <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
+                </div>";
+                $showmsg=false; 
+        }    
+        if($showerror==TRUE)
+        {
+        echo  "<div class='warning_message'>
+                    <p class='h2'>$showerror</p>
+                    <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
+                </div>";
+                $showesrror=false; 
+        }      
+    ?>
+
+    <!-- top songs sections -->
     <section class="TopSongs flex">
         <div class="Songheading flex">
             <h1 style="font-size:3rem;">TOP 10 Songs</h1>
-            <a class="addsong">+ Add Song</a>
+            <button class="addsong" onclick="document.getElementById('addsongbox').style.display='block'" >+ Add Song</button>
         </div>
-    
-            <table class="tableArtist">
-                <tr>
-                    <th>Artwork</th>
-                    <th>Song</th>
-                    <th>Date of Realese</th>
-                    <th>Artist</th>
-                    <th>Rating</th>
-                </tr>
-                <tr>
-                    <td>hello</td>
-                    <td>hello</td>
-                    <td>hello</td>
-                    <td>hello</td>
-                    <td>hello</td>
-                </tr>
-            </table>
+
+        <table class="tableArtist">
+            <tr>
+                <th>Artwork</th>
+                <th>Song</th>
+                <th>Date of Realese</th>
+                <th>Artist</th>
+                <th>Rating</th>
+            </tr>
+            <tr>
+                <td>hello</td>
+                <td>hello</td>
+                <td>hello</td>
+                <td>hello</td>
+                <td>hello</td>
+            </tr>
+        </table>
     </section>
 
 
-<!-- top artist section -->
+    <!-- top artist section -->
 
     <section class="TopArtist flex">
         <div class="Artistheading flex">
             <h1 style="font-size:3rem;">TOP 10 Artists</h1>
         </div>
-    
-            <table class="tableArtist">
-                <tr>
-                    <th>Artist</th>
-                    <th>Date of Birth</th>
-                    <th>Songs</th>
-                </tr>
-                <tr>
-                    <td>hello</td>
-                    <td>hello</td>
-                    <td>hello</td>
-                </tr>
-            </table>
+
+        <table class="tableArtist">
+            <tr>
+                <th>Artist</th>
+                <th>Date of Birth</th>
+                <th>Songs</th>
+            </tr>
+            <tr>
+                <td>hello</td>
+                <td>hello</td>
+                <td>hello</td>
+            </tr>
+        </table>
     </section>
 
-<!-- add new song section -->
-    <section class="addsongdetails flex">
-        <h1 style="font-size:2.5rem;padding:2rem 4rem">Adding a New Song -</h1>
-        <form class="flex formdata" action="#" method="POST" enctype="multipart/form-data">
+    <!-- add new song section -->
+    <section>
+        <div class="addsongdetails flex" id="addsongbox">
+         <div class="flex songheader">
+             <h1 style="font-size:2.5rem;">Adding a New Song -</h1>
+             <button class="cross">&#9747</button>
+         </div>
+         <form class="flex formdata" action="#" method="POST" enctype="multipart/form-data">
             <div class="flex field">
                 <label for="sname">Song Name </label>
                 <input class="input" type="text" name="song_name" id="sname" required>
             </div>
             <div class="flex field">
                 <label for="date">Date Released </label>
-                <input  class="input" type="date" name="released_date" id="date" required>
+                <input class="input" type="date" name="released_date" id="date" required>
             </div>
             <div class="flex field">
                 <label for="photo">Artwork </label>
-                <input class="input" type="file" name="artwork" id="photo" value="Upload Image" accept="image/*" required>
+                <input class="input" type="file" name="artwork" id="photo" value="Upload Image" accept="image/*"
+                    required>
             </div>
             <div class="flex field">
                 <label for="aname">Artist </label>
-                <input class="input" type="text" name="artists" list="aname" required>
+                <input class="input" type="text" name="artists" list="aname" Placeholder="Search Artist" required>
                 <datalist id="aname">
-                <?php
+                    <?php
                     require './database_connection.php';
                     $q1="SELECT artist_name from artist";
                     $res=mysqli_query($conn,$q1);
@@ -224,12 +241,13 @@
             <div style="text-align: center; margin-top: 3rem;">
                 <input class="button" type="submit" value="Save">
                 <input class="button" type="reset" value="cancel">
-             </div>
-        </form>
+            </div>
+         </form>
+        </div>
     </section>
 
 
-<!-- add artist section -->
+    <!-- add artist section -->
     <section class="addartist flex">
         <div class="flex header">
             <h1>Add Artist -</h1>
@@ -242,19 +260,18 @@
             </div>
             <div class="flex field">
                 <label for="DOB">Date of Birth </label>
-                <input  class="input" type="date" name="DOB" id="DOB">
+                <input class="input" type="date" name="DOB" id="DOB">
             </div>
             <div class="flex field">
                 <label for="boi">Bio </label>
-                <textarea class="input"  name="bio" id="bio" ></textarea>
+                <textarea class="input" name="bio" id="bio"></textarea>
             </div>
             <div style="text-align: center; margin-top: 3rem;">
                 <input class="button" type="submit" value="Save">
                 <input class="button" type="reset" value="cancel">
             </div>
-            
+
         </form>
     </section>
-
-</body>
+ </body>
 </html>
