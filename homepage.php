@@ -124,7 +124,7 @@
  <body>
     <nav class="navigation">
         <ul class="flex">
-            <li class="link"><a href="#">HOME</a></li>
+            <li class="link"><a href="homepage.php">HOME</a></li>
             <h1 class="link">Spotify-Clone</h1>
         </ul>
     </nav>
@@ -246,13 +246,34 @@
                 <th>Artist</th>
                 <th>Rating</th>
             </tr>
-            <tr>
-                <td>hello</td>
-                <td>hello</td>
-                <td>hello</td>
-                <td>hello</td>
-                <td>hello</td>
-            </tr>
+            <?php
+                 require 'database_connection.php';
+                 $query3="SELECT * FROM songs";
+                 $result4=mysqli_query($conn,$query3);
+                 if(mysqli_num_rows($result4)>0)
+                 {
+                     while($data2=mysqli_fetch_assoc($result4))
+                     {
+                         $sname=$data2['song_name'];
+                         $dr=$data2['date_released'];
+                         $Artwork=$data2['artwork'];
+                         $singername=$data2['singer'];
+                         echo <<<x
+                              <tr>
+                                 <td>
+                                    <div class="artworkbox">
+                                    <img src="$Artwork" alt="$Artwork" width="100%" height="100%">
+                                    </div>
+                                 </td>
+                                 <td>$sname</td>
+                                 <td>$dr</td>
+                                 <td>$singername</td>
+                              </tr>
+                              x;
+                     }
+                 }
+                 mysqli_close($conn);
+            ?>
         </table>
     </section>
 
@@ -270,30 +291,30 @@
                 <th>Songs</th>
             </tr>
             <?php
-            require 'database_connection.php';
-            $query3="SELECT artist.artist_name ,artist.date_of_birth ,songs.song_name
-                     FROM artist
-                     INNER JOIN songs
-                     ON songs.singer=artist.artist_name
-                     group by songs.singer";
-            $result4=mysqli_query($conn,$query3);
-            if(mysqli_num_rows($result4)>0)
-            {
-                while($data1=mysqli_fetch_assoc($result4))
+                require 'database_connection.php';
+                $query4="SELECT artist.artist_name ,artist.date_of_birth ,songs.song_name
+                        FROM artist
+                        INNER JOIN songs
+                        ON songs.singer=artist.artist_name
+                        group by songs.singer";
+                $result5=mysqli_query($conn,$query4);
+                if(mysqli_num_rows($result5)>0)
                 {
-                    $name=$data1['artist_name'];
-                    $dob=$data1['date_of_birth'];
-                    $songname=$data1['song_name'];
-                    echo <<<x
-                         <tr>
-                            <td>$name</td>
-                            <td>$dob</td>
-                            <td>$songname</td>
-                         </tr>
-                         x;
+                    while($data1=mysqli_fetch_assoc($result5))
+                    {
+                        $name=$data1['artist_name'];
+                        $dob=$data1['date_of_birth'];
+                        $songname=$data1['song_name'];
+                        echo <<<x
+                            <tr>
+                                <td>$name</td>
+                                <td>$dob</td>
+                                <td>$songname</td>
+                            </tr>
+                            x;
+                    }
                 }
-            }
-
+                mysqli_close($conn);
             ?>
         </table>
     </section>
