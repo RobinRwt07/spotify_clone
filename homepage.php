@@ -108,8 +108,7 @@
          
     }
   }   
- ?>
-
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -130,13 +129,34 @@
         </ul>
     </nav>
 
-    <!-- add new song section -->
+<!-- display message -->
+    <?php
+        if($showmsg==TRUE)
+        {
+        echo  "<div class='alert_message'>
+                    <p class='h2'>$showmsg</p>
+                    <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
+                </div>";
+                $showmsg=false; 
+        }    
+        if($showerror==TRUE)
+        {
+        echo  "<div class='warning_message'>
+                    <p class='h2'>$showerror</p>
+                    <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
+                </div>";
+                $showesrror=false; 
+        }      
+    ?>
+
+
+<!-- add new song section -->
     <section class="songcontainer"  id="addsongbox">
 
         <div class="addsongdetails flex">
             <div class="flex songheader">
                 <h1 style="font-size:2.5rem;">Adding a New Song -</h1>
-                <button class="cross" onclick="document.getElementById('addsongbox').style.display='none'">&#9747</button>
+                <button class="cross" onclick="closesongform()">&#9747</button>
             </div>
             <form class="flex formdata" action="#" method="POST" enctype="multipart/form-data">
                 <div class="flex field">
@@ -175,37 +195,47 @@
                 <div style="text-align: center; margin-top: 3rem;">
                     <input class="button" type="submit" value="Save">
                     <input class="button" type="reset" value="cancel">
-                    <button class="button" onclick=" document.getElementById('addartistsection').style.display='block' ">+ Add Artist</button>
+                    <button class="button" onclick="openartistform()">+ Add Artist</button>
                 </div>
             </form>
             </div>
     </section>
 
-            <!-- display message -->
-    <?php
-        if($showmsg==TRUE)
-        {
-        echo  "<div class='alert_message'>
-                    <p class='h2'>$showmsg</p>
-                    <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
-                </div>";
-                $showmsg=false; 
-        }    
-        if($showerror==TRUE)
-        {
-        echo  "<div class='warning_message'>
-                    <p class='h2'>$showerror</p>
-                    <div class='cross1' onclick='this.parentNode.remove();'>&times;</div>
-                </div>";
-                $showesrror=false; 
-        }      
-    ?>
+  
+<!-- add artist section -->
+    <section class="flex artistcontianer" id="addartistsection">
+        
+        <div class="addartist flex" >
+            <div class="flex header">
+                <h1>Add Artist -</h1>
+                <button class="cross" onclick="closeartistform()">&#9747 </button>
+            </div>
+            <form class="flex artistdata" action="<?php htmlspecialchars($_SERVER['PHP_SELF']);?>" method="GET">
+                <div class="flex field">
+                    <label for="AN">Artist Name </label>
+                    <input class="input" type="text" name="artist_name" id="AN">
+                </div>
+                <div class="flex field">
+                    <label for="DOB">Date of Birth </label>
+                    <input class="input" type="date" name="DOB" id="DOB">
+                </div>
+                <div class="flex field">
+                    <label for="boi">Bio </label>
+                    <textarea class="input" name="bio" id="bio"></textarea>
+                </div>
+                <div style="text-align: center; margin-top: 3rem;">
+                    <input class="button" type="submit" value="Save">
+                    <input class="button" type="reset" value="cancel">
+                </div>
+            </form>
+        </div>
+    </section>
 
-    <!-- top songs sections -->
+<!-- top songs sections -->
     <section class="TopSongs flex">
         <div class="Songheading flex">
             <h1 style="font-size:3rem;">TOP 10 Songs</h1>
-            <button class="button" onclick="document.getElementById('addsongbox').style.display='block'" >+ Add Song</button>
+            <button class="button" onclick="opensongform()" >+ Add Song</button>
         </div>
 
         <table class="tableArtist">
@@ -239,42 +269,35 @@
                 <th>Date of Birth</th>
                 <th>Songs</th>
             </tr>
-            <tr>
-                <td>hello</td>
-                <td>hello</td>
-                <td>hello</td>
-            </tr>
+            <?php
+            require 'database_connection.php';
+            $query3="SELECT artist.artist_name ,artist.date_of_birth ,songs.song_name
+                     FROM artist
+                     INNER JOIN songs
+                     ON songs.singer=artist.artist_name
+                     group by songs.singer";
+            $result4=mysqli_query($conn,$query3);
+            if(mysqli_num_rows($result4)>0)
+            {
+                while($data1=mysqli_fetch_assoc($result4))
+                {
+                    $name=$data1['artist_name'];
+                    $dob=$data1['date_of_birth'];
+                    $songname=$data1['song_name'];
+                    echo <<<x
+                         <tr>
+                            <td>$name</td>
+                            <td>$dob</td>
+                            <td>$songname</td>
+                         </tr>
+                         x;
+                }
+            }
+
+            ?>
         </table>
     </section>
-
-  
-<!-- add artist section -->
-    <section class="artistcontianer flex" id="addartistsection">
-        
-        <div class="addartist flex" >
-            <div class="flex header">
-                <h1>Add Artist -</h1>
-                <button class="cross" onclick="document.getElementById('addartistsection').style.display='none'">&#9747 </button>
-            </div>
-            <form class="flex artistdata" action="<?php htmlspecialchars($_SERVER['PHP_SELF']);?>" method="GET">
-                <div class="flex field">
-                    <label for="AN">Artist Name </label>
-                    <input class="input" type="text" name="artist_name" id="AN">
-                </div>
-                <div class="flex field">
-                    <label for="DOB">Date of Birth </label>
-                    <input class="input" type="date" name="DOB" id="DOB">
-                </div>
-                <div class="flex field">
-                    <label for="boi">Bio </label>
-                    <textarea class="input" name="bio" id="bio"></textarea>
-                </div>
-                <div style="text-align: center; margin-top: 3rem;">
-                    <input class="button" type="submit" value="Save">
-                    <input class="button" type="reset" value="cancel">
-                </div>
-            </form>
-        </div>
-    </section>
+<!-- adding javascript file -->
+    <script src="script.js"></script>
 </body>
 </html>

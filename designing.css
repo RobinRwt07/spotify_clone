@@ -45,7 +45,7 @@ ul
   width: 100%;
   color:white;
   max-height:15vh;
-  background-color:#333;
+  background-color: rgb(4, 0, 48);
   align-items: center;
 }
 .link
@@ -80,19 +80,22 @@ ul
 th
 {
   background-color: rgb(21, 0, 47);
-  color:white;
+  color:rgb(159, 30, 30);
   padding:.5rem;
 }
 th,td
 {
   border-left:1.5px solid black;
+  padding:2rem 1rem;
+}
+tr{
+  border-bottom: 2px solid black;
 }
 .songcontainer
 {
   width: 100%;
   background-color:rgba(104, 104, 104, 0.95);
-  min-height: 40vh;
-  
+  height:100vh;
   padding: 2rem;
   display: none;
   position: fixed; /* Stay in place */
@@ -146,14 +149,12 @@ option
 .artistcontianer
 {
   width: 100%;
-  background-color:rgba(255, 228, 149, 0.95);
-  min-height: 40vh;
-  padding: 2rem;
+  background-color:rgb(76, 76, 76);
+  height:100vh;
+  padding:4rem 2rem;
   justify-content: center;
   display: none;
-  position:absolute;
-  top: 0;
-  left: 0;
+  position:fixed;
    /* Stay in place */
   z-index:2;
 }
@@ -161,6 +162,7 @@ option
 {
   flex-direction: column;
   width: 50%;
+  margin: auto;
   background-color: bisque;
   border: 1px solid black;
 }
